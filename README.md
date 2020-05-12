@@ -10,7 +10,9 @@ User : No (System will wait for user to speak again)
 User : Yes
 System: Okay! Look at the camera (webcam opens)
 
-![Main Screen](MainScreen.PNG)
+<p align="center">
+  <img src="MainScreen.png" width="350" title="Main Screent">
+</p>
 
 
 
