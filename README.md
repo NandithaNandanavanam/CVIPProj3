@@ -16,9 +16,9 @@ $ source bin/activate
 ```
 Install dependencies
 ```
-$ pip3 install -r requirements.txt
+(touchless_env)$ pip3 install -r requirements.txt
 ```
 Run the code
 ```
-$ python test.py
+(touchless_env)$ python test.py
 ```
