@@ -2,7 +2,7 @@ import cv2
 
 def capture_image():
     cam = cv2.VideoCapture(0)
-    cv2.namedWindow("test")
+    cv2.namedWindow("test", cv2.WINDOW_NORMAL)
     img_counter = 0
     
     while True:

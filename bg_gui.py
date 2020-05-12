@@ -20,26 +20,15 @@ def browseimage():
     root.mainloop()
     
 def voicemodule():
-    print("here")
-    flag = "dummy"
-    print("here")
-    while flag != "start":
-        voicecommand = "dummy"
-        voicecommand, error = Voice.voice_module()
-        if error ==0:
-            label1 = Label(rightframe, text="You said : " + voicecommand)
-        else:
-            label1 = Label(rightframe, text=voicecommand)
-        if voicecommand == "start":
-            break
-        elif voicecommand == "stop":
-            root.destroy()
-        label1.pack()
-        rightframe.pack(side=RIGHT)
-        root.mainloop()
+    voicecommand, error = Voice.voice_module()
+    if error ==0:
+        label1 = Label(rightframe, text="You said : " + voicecommand)
+    else:
+        label1 = Label(rightframe, text=voicecommand)
 
-    captureimage()
-    
+    label1.pack()
+    rightframe.pack(side=RIGHT)
+    root.mainloop()
 
     
 def captureimage():
@@ -61,6 +50,10 @@ root = Tk()
 root.title("Face enabled Time clock")
 root.attributes("-zoomed",True)
 
+f = open("nohup.out", "r")
+print(f.read().split().pop())
+test = "dsf"
+print(test)
 #Create topframe, bottomframe, leftframe and rightframe
 topframe=Frame(root)
 topframe.pack(side=TOP)
@@ -92,19 +85,7 @@ Bt3.pack(fill=X,pady=10)
 
 rightframe.pack(side=RIGHT)
 
-'''
-r = sr.Recognizer()
-with sr.Microphone() as source:
-    print("Speak Anything :")
-    audio = r.listen(source)
-    try:
-        text = r.recognize_google(audio)
-        print("You said : {}".format(text))
-        flag = text.lower()
-    except:
-        print("Sorry could not recognize what you said")
-'''
-voicemodule()
+
 #stable main window on infinity time
 root.mainloop()
 

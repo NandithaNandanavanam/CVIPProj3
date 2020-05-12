@@ -20,11 +20,12 @@ def detect_text(path):
     response = client.text_detection(image=image)
     texts = response.text_annotations
     print('Texts:')
-    with open('text_'+sys.argv[1].split('.')[0]+'.txt', 'a') as the_file:
+    with open('text_'+path+'.txt', 'a') as the_file:
         the_file.write(texts[0].description)
     results = ner.NLP(texts[0].description)
     with open('data.json', 'w') as fp:
         json.dump(results, fp)
+    print(results)
     for text in texts[1:]:
         print('\n"{}"'.format(text.description))
 
@@ -36,7 +37,7 @@ def detect_text(path):
         cv2.line(img, vertices[2], vertices[3], (0, 255, 0))
         cv2.line(img, vertices[3], vertices[0], (0, 255, 0))
 
-        print('bounds: ',vertices)
+        #print('bounds: ',vertices)
     cv2.imwrite('result_'+path, img)
 
     if response.error.message:
@@ -44,5 +45,6 @@ def detect_text(path):
             '{}\nFor more info on error messages, check: '
             'https://cloud.google.com/apis/design/errors'.format(
                 response.error.message))
+    return results
 
 #detect_text(sys.argv[1])
