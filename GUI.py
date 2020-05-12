@@ -64,7 +64,7 @@ while True:
     root.update_idletasks()
     root.update()
      
-    image = PhotoImage(file="gecap.png") 
+    image = PhotoImage(file="gecap.PNG") 
     image = image.subsample(3,3)
     Label(leftframe, image=image).grid(row=0,column=0, padx=5, pady=5)
     Label(leftframe, text="Welcome to the Touch less Face enabled Clock In/Clock Out System. Say LOGIN to Clock In, EXIT to close", bg='beige',bd=3).grid(row=1, column=0, padx=5, pady=5)
