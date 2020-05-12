@@ -22,3 +22,7 @@ Run the code
 ```
 (touchless_env)$ python test.py
 ```
+Deactivate environment
+```
+touchless_env)$ deactivate
+```
