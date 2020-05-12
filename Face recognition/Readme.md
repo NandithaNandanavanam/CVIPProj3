@@ -1,4 +1,4 @@
 to run:
 ```
-$ python real_face_time.py
+$ python real_time_face.py
 ```
