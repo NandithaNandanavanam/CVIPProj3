@@ -11,4 +11,6 @@ User : Yes
 System: Okay! Look at the camera (webcam opens)
 
 ```
-![MainScreen]("MainScreen.PNG")
+<p align="center">
+  <img src="MainScreen.PNG" width="350" title="Main Screent">
+</p>
