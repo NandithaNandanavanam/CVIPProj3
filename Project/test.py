@@ -104,6 +104,18 @@ def detect():
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
+        font                   = cv2.FONT_HERSHEY_SIMPLEX
+        bottomLeftCornerOfText = (100,200)
+        fontScale              = 1
+        fontColor              = (255,255,255)
+        lineType               = 2
+        # Display the resulting image
+        cv2.putText(frame,str(Unknown_count), 
+        bottomLeftCornerOfText, 
+        font, 
+        fontScale,
+        fontColor,
+        lineType)
         # Display the resulting image
         cv2.imshow('Video', frame)
         
@@ -127,8 +139,9 @@ def captureimage():
 
     # Initialize some variables
     face_locations = []
-
-    while True:
+    count = 30
+    while True and count > 0 :
+        count -= 1
         # Grab a single frame of video
         ret, frame = video_capture.read()
 
@@ -154,23 +167,49 @@ def captureimage():
             #face_image = cv2.rectangle( face_image, (left,top), (right, bottom), (255,0,0))
             # Put the blurred face region back into the frame image
             #frame[top:bottom, left:right] = face_image
-
+        font                   = cv2.FONT_HERSHEY_SIMPLEX
+        bottomLeftCornerOfText = (0,30)
+        fontScale              = 1
+        fontColor              = (255,255,255)
+        lineType               = 2
         # Display the resulting image
-        cv2.imshow('Face detect', frame)
+        cv2.putText(frame,str(count), 
+        bottomLeftCornerOfText, 
+        font, 
+        fontScale,
+        fontColor,
+        lineType)
+        cv2.imshow('Video', frame)
+        # Display the resulting image
+        #cv2.imshow('Face detect', frame)
 
         # Hit 'q' on the keyboard to quit!
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     face_frame = frame
-    
+    video_capture.release()
+    cv2.destroyAllWindows()
+    video_capture = cv2.VideoCapture(0)
     # Initialize some variables
-
-    while True:
+    count = 100
+    while True and count>0:
+        count -= 1
         # Grab a single frame of video
         ret, frame = video_capture.read()
 
         cv2.rectangle(frame,(100,100), (600,400), (0,0,255),3)
-
+        font                   = cv2.FONT_HERSHEY_SIMPLEX
+        bottomLeftCornerOfText = (80,80)
+        fontScale              = 1
+        fontColor              = (255,255,255)
+        lineType               = 2
+        # Display the resulting image
+        cv2.putText(frame,str(count), 
+        bottomLeftCornerOfText, 
+        font, 
+        fontScale,
+        fontColor,
+        lineType)
         # Display the resulting image
         cv2.imshow('document', frame)
 
