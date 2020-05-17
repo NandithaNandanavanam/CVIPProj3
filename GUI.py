@@ -1,140 +1,112 @@
 from tkinter import *
+import tkinter.filedialog as fdialog
 import cv2
 import Voice
 import capture
-import time
-import PIL
-from PIL import Image,ImageTk
+import speech_recognition as sr
 
-def verify_voice_command():
-    print("Verifying")
-    while True:
-        label_voicetest.configure(text="Is this what you said? Say Yes or No")
-        label_voicetest.place()
-        
-        root.update_idletasks()
-        root.update()
-        
-        voiceverify = Voice.voice_module()
-        if voiceverify=="yes":
-            print("Verified")
-            label_voicetest.configure(text="Speak Anything")
-            label_voicetest.place()
+def browseimage():
+    filename = fdialog.askopenfilename()
+    img = cv2.imread(filename)
+    img=cv2.resize(img,(350,350))
+    cv2.imwrite('face.png',img)
+    photo=PhotoImage(file='face.png')
+    
+    canvas.delete("all")
+    canvas2 = canvas.create_image(1,1,anchor=NW, image=photo)
+    canvas.itemconfig(canvas1, image = canvas2)
+    canvas.pack()
+    leftframe.pack(side=LEFT)
+    root.mainloop()
+    
+def voicemodule():
+    print("here")
+    flag = "dummy"
+    print("here")
+    while flag != "start":
+        voicecommand = "dummy"
+        voicecommand, error = Voice.voice_module()
+        if error ==0:
+            label1 = Label(rightframe, text="You said : " + voicecommand)
+        else:
+            label1 = Label(rightframe, text=voicecommand)
+        if voicecommand == "start":
             break
-        elif voiceverify=="no":
-            print("Not correct")
-            label_voicetest.configure(text="Speak Anything")
-            label_voicetest.place()
-            break
+        elif voicecommand == "stop":
+            root.destroy()
+        label1.pack()
+        rightframe.pack(side=RIGHT)
+        root.mainloop()
 
-def display_chat(voicecommand,rownum):
-    rownum=rownum+1
-    Label(rightframe, text=time.strftime("%H:%M:%S"), bg='white',fg='black',bd=3).grid(row=rownum,column=0,padx=5, pady=5)
-    rownum=rownum+1
-    Label(rightframe, text="You said : " + voicecommand, bg='white',fg='black',bd=3).grid(row=rownum,column=0,padx=5, pady=5)
+    captureimage()
     
 
-def show_frame():
-    _, frame = cap.read()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
-    faces = faceCascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(30, 30)
-    )
-    for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-
-    frame = cv2.flip(frame, 1)  
-    cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)  
-    img = Image.fromarray(cv2image)
-    imgtk = ImageTk.PhotoImage(image=img)
-    lmain.imgtk = imgtk 
-    lmain.configure(image=imgtk)
-        
+def captureimage():
+    img = capture.capture_image()
+    cv2.imwrite("facedetected.png",img)
+    
+    photo=PhotoImage(file='facedetected.png')
+    
+    canvas.delete("all")
+    canvas2 = canvas.create_image(1,1,anchor=NW, image=photo)
+    canvas.itemconfig(canvas1, image = canvas2)
+    canvas.pack()
+    leftframe.pack(side=LEFT)
+    root.mainloop()
+    
 #GUI
-root = Tk() 
-root.title("ClockIn/ClockOut Application") 
-root.config(bg="beige") 
- 
-leftframe = Frame(root, width=200, height=400, bg='beige')
-leftframe.grid(row=0, column=0, padx=10, pady=5)
-rightframe = Frame(root, width=650, height=400, bg='beige')
-rightframe.grid(row=0, column=1, padx=10, pady=5)
+#Create window
+root = Tk()
+root.title("Face enabled Time clock")
+root.attributes("-zoomed",True)
 
-label_voice = Label(leftframe,text="")
-label_voice.grid(row=5,column=0, padx=5, pady=5)
+#Create topframe, bottomframe, leftframe and rightframe
+topframe=Frame(root)
+topframe.pack(side=TOP)
 
-label_voicetest = Label(leftframe,text="Speak Anything",bg="lightgrey")
-label_voicetest.grid(row=4,column=0, padx=5, pady=5)
+bottomframe=Frame(root)
+bottomframe.pack(side=BOTTOM)
 
-cascPath = "haarcascade_frontalface_default.xml"
-faceCascade = cv2.CascadeClassifier(cascPath)
+leftframe=Frame(topframe,bg='black')
+leftframe.pack(side=LEFT)
 
-cap = cv2.VideoCapture(0)
-while True:
-    root.update_idletasks()
-    root.update()
-     
-    lmain=Label(leftframe)
-    lmain.grid(row=0,column=0, padx=5, pady=5)
+rightframe=Frame(bottomframe)
+rightframe.pack(side=RIGHT)
+
+canvas=Canvas(leftframe,width=500,height=400)
+canvas.pack()
+photo=PhotoImage(file='gecap.png')
+canvas1=canvas.create_image(20,10,anchor=NW, image=photo)
+leftframe.pack(side=LEFT)
     
-    root.update_idletasks()
-    root.update()
-   
-    show_frame()
+#buttons
+Bt1=Button(rightframe,text="Capture Image",background="LightBlue", bd=0,width=15,height=1,command=captureimage)
+Bt1.pack(fill=X,pady=10)
 
-    root.update_idletasks()
-    root.update()
+Bt2=Button(rightframe,text="Capture Voice",background="LightBlue", bd=0,width=15,height=1,command=voicemodule)
+Bt2.pack(fill=X,pady=10)
 
-    Label(leftframe, text="Welcome to the Touch less Face enabled Clock In/Clock Out System. Say LOGIN to Clock In, EXIT to close", bg='lightgrey',bd=10).grid(row=1, column=0, padx=5, pady=5)
+Bt3=Button(rightframe,text="Exit",background="LightBlue", bd=0,width=15,height=1,command=root.destroy)
+Bt3.pack(fill=X,pady=10)
 
-    Label(rightframe, text="Chat with the System", bg='lightgrey',fg='black',bd=3).grid(row=0,column=0,padx=5, pady=5) 
-    Label(rightframe, text=time.strftime("%H:%M:%S"), bg='lightgrey',fg='black',bd=3).grid(row=1,column=0,padx=5, pady=5)
-    Label(rightframe, text="System: Hello, What do you want to do?", bg='lightgrey',fg='black',bd=3).grid(row=2,column=0,padx=5, pady=5)
-    
-    root.update_idletasks()
-    root.update()
-    
-    voicecommand = Voice.voice_module()
-    label_voice.configure(text="You said : " + voicecommand)
-    label_voice.place()
-    
-    root.update_idletasks()
-    root.update()
-    
-    verify_voice_command()
-    
-    rownum=2
-    display_chat(voicecommand,rownum)
-    
-    if voicecommand=="login":
-        Label(rightframe, text=time.strftime("%H:%M:%S"), bg='lightgrey',fg='black',bd=3).grid(row=5,column=0,padx=5, pady=5)
-        Label(rightframe, text="Okay!Look at the camera", bg='lightgrey',fg='black',bd=3).grid(row=6,column=0,padx=5, pady=5)
-        
-        cv2.imwrite("face1.png",frame)
-        
-        root.update_idletasks()
-        root.update()
-    
-    elif voicecommand=="exit":
-        break
-    else:
-        continue
-   
+rightframe.pack(side=RIGHT)
 
-    
-    
-    
-    
-  
-
-
-
-
-
+'''
+r = sr.Recognizer()
+with sr.Microphone() as source:
+    print("Speak Anything :")
+    audio = r.listen(source)
+    try:
+        text = r.recognize_google(audio)
+        print("You said : {}".format(text))
+        flag = text.lower()
+    except:
+        print("Sorry could not recognize what you said")
+'''
+voicemodule()
+#stable main window on infinity time
+root.mainloop()
 
        
 
